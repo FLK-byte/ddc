@@ -10,16 +10,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id     Int      @id @default(autoincrement())
-  name   String
-  Videos Videos[]
-}
-
 model Videos {
-  id            Int    @id @default(autoincrement())
+  id            Int      @id @default(autoincrement())
   videoPath     String
   thumbnailPath String
-  uploadedBy    User   @relation(fields: [userId], references: [id])
-  userId        Int
+  description   String
+  title         String
+  hash          String   @unique
+  createdAt     DateTime @default(now())
 }

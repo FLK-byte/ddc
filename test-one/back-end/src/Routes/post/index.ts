@@ -1,11 +1,11 @@
-import { Application } from "express";
+import {Application} from "express";
+import {fileMiddleware, videoMiddleware, thumbnailMiddleware} from "../../Middlewares"
+import {videoController} from "../../Controllers"
 
-export function postRoutes (app: Application) {
-    app.post("/upload/video", (req, res)=>{
+export function postRoutes(app: Application) {
+    const controller = new videoController
 
-    })
+    app.post("/upload/video", videoMiddleware, fileMiddleware, controller.createVideo)
 
-    app.post("/upload/thumbnail", (req, res)=>{
-
-    })
+    app.post("/upload/thumbnail", thumbnailMiddleware, fileMiddleware, controller.updateVideoThumbnail)
 }

@@ -1,7 +1,6 @@
 import { Application } from "express";
-
+import {videoController} from "../../Controllers"
 export function deleteRoutes (app: Application) {
-    app.delete("/delete/:id", (req, res)=>{
-        res.send("Hello World ")
-    })
+    const controller = new videoController()
+    app.delete("/delete/:id", controller.deleteVideo)
 }
