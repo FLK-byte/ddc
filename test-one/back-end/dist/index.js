@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const index_1 = require("./Routes/index");
+const express = require('express');
+const app = express();
+const port = 3000;
+(0, index_1.getRoutes)(app);
+(0, index_1.postRoutes)(app);
+(0, index_1.deleteRoutes)(app);
+app.listen(port, () => console.log("Server is running at: ", port));

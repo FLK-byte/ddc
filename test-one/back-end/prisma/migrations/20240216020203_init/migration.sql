@@ -1,0 +1,14 @@
+-- CreateTable
+CREATE TABLE "User" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "name" TEXT NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "Videos" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "videoPath" TEXT NOT NULL,
+    "thumbnailPath" TEXT NOT NULL,
+    "userId" INTEGER NOT NULL,
+    CONSTRAINT "Videos_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
