@@ -25,13 +25,11 @@ export class videoController {
     async deleteVideo(req: Request, res: Response, next: NextFunction) {
         try {
             const {hashIdentifier} = req
+
             const video = await deleteVideo(hashIdentifier)
-            const thumb = await deleteThumbnail(hashIdentifier)
-            fs.unlink((thumb?.thumbnailPath as string), () => {
-            })
-            fs.unlink((video?.videoPath as string), () => {
-                res.send("Files removed")
-            })
+            fs.unlink((video.videoPath as string), () => {})
+            res.status(200).json({message: "files Removed"})
+            next()
         } catch (err) {
             next(err)
         }

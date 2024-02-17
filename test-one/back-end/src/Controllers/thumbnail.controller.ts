@@ -24,10 +24,8 @@ export class thumbnailController {
             const {hashIdentifier} = req
             const thumb = await deleteThumbnail(hashIdentifier)
 
-            fs.unlink((thumb?.thumbnailPath as string), () => {
-                res.send("Thumbnail removed")
-            })
-
+            fs.unlink((thumb?.thumbnailPath as string), () => {})
+            next()
         } catch (err) {
             next(err)
         }
