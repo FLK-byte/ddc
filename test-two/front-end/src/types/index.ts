@@ -37,3 +37,7 @@ export type Estado = {
     categorias: Categoria[];
     carrinhoDeProdutos: ItemCarrinho[];
 };
+
+export interface cartProduct extends Produto  {
+    quantidade: number
+}

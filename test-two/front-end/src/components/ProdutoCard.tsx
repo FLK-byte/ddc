@@ -10,10 +10,17 @@ export const ProdutoCard = ({produto}: ProdutoCardProps) => {
     const { carrinhoDeProdutos, setCarrinhoDeProdutos } = useContext(CarrinhoDeCompras)
 
     const insertProductOnCart = () => {
-        if(carrinhoDeProdutos
-            .filter((el, idx)=>(el.idProduto === produto.id))
-            .length > 0
-        ) return toast("Esse produto ja esta no carrinho, caso queira incrementa-lo abra o carrinho de compras", {type: "info"})
+        const productInCart = carrinhoDeProdutos.filter((el, idx)=>(el.idProduto === produto.id))
+
+        if(productInCart.length > 0) {
+            const cartWithoutProduct = carrinhoDeProdutos.filter((el, idx)=>(el.idProduto !== produto.id))
+            productInCart[0].quantidade+=1
+
+            setCarrinhoDeProdutos([...cartWithoutProduct, ...productInCart])
+            toast("Esse produto ja esta no carrinho, incrementamos uma unidade do mesmo", {type: "info"})
+
+            return
+        }
 
         setCarrinhoDeProdutos([...carrinhoDeProdutos, {idProduto: produto.id, quantidade: 1, preco: produto.preco}])
         toast("Produto adicionado ao carrinho", {type: "success"})

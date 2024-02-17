@@ -2,7 +2,7 @@
 import React, { useState, createContext } from 'react';
 import {Categoria, ItemCarrinho, Produto} from "@/types";
 import {TabsContainer} from "@/components/TabsContainer";
-import {ModalCart} from "@/components/modalCart";
+import {ModalCart} from "@/components/modalCart/modalCart";
 import { FaShoppingCart } from "react-icons/fa";
 export const CarrinhoDeCompras = createContext<{
     carrinhoDeProdutos: ItemCarrinho[],
