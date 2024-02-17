@@ -1,16 +1,21 @@
 import {Request, Response, NextFunction} from "express"
-import {deleteVideo, createVideo, deleteVideoThumbnail, updateVideoThumbnail, findVideoById} from "../Services"
+import {deleteVideo, createVideo, findVideoByHash, deleteThumbnail} from "../Services"
+
 import fs from "fs"
+
 interface requestFile extends Express.Multer.File {
     description: string,
     path: string
 }
 
 export class videoController {
+
     async createVideo(req: Request, res: Response, next: NextFunction) {
         try {
-            const {filename, path, originalname, description} = req.file as requestFile
-            await createVideo({description, videoPath: path, hash: filename, title: originalname})
+            const {hashIdentifier} = req
+            const {path, originalname, description,} = req.file as requestFile
+
+            await createVideo({description, videoPath: path, hash: hashIdentifier, title: originalname})
             return res.send(req.file)
         } catch (err) {
             next(err)
@@ -19,9 +24,34 @@ export class videoController {
 
     async deleteVideo(req: Request, res: Response, next: NextFunction) {
         try {
-            const {videoId} = req
-            await deleteVideo(videoId)
-            //logic to remove file
+            const {hashIdentifier} = req
+            const video = await deleteVideo(hashIdentifier)
+            const thumb = await deleteThumbnail(hashIdentifier)
+            fs.unlink((thumb?.thumbnailPath as string), () => {
+            })
+            fs.unlink((video?.videoPath as string), () => {
+                res.send("Files removed")
+            })
+        } catch (err) {
+            next(err)
+        }
+    }
+
+    async downloadVideoByHash(req: Request, res: Response, next: NextFunction) {
+        try {
+            const {hashIdentifier} = req
+            const video = await findVideoByHash(hashIdentifier)
+
+            const uploadFolder = "./src/uploads/videos"
+            fs.readdir(uploadFolder, (_, files) => {
+                files.map(file => {
+                    const [name, extension] = file.split(".")
+                    if (name == hashIdentifier) res.download((video?.videoPath as string), (err) => {
+                        if (err) throw new Error("Error sending video")
+                    })
+                })
+            })
+
         } catch (err) {
             next(err)
         }
@@ -29,33 +59,11 @@ export class videoController {
 
     async getVideos(req: Request, res: Response, next: NextFunction) {
         try {
-            //res.download("./src/uploads/videos/bec310b005e391bdfd4d2555e8e1e086", "teste")
-/*            const uploadFolder = "./src/uploads/"
-            fs.readdir(uploadFolder, (_, files)=>{
-                files.forEach((dir)=>{
-                   res.download(uploadFolder+"/"+dir)
-                })
-            })*/
+            const uploadFolder = "./src/uploads/videos"
+            fs.readdir(uploadFolder, (_, files) => {
+                return res.send(files)
+            })
 
-        } catch (err) {
-            next(err)
-        }
-    }
-    async getVideoById(req: Request, res: Response, next: NextFunction) {
-        try {
-            const {videoId} = req
-            const video = await findVideoById(videoId)
-            console.log(video)
-        } catch (err) {
-            next(err)
-        }
-    }
-
-    async updateVideoThumbnail(req: Request, res: Response, next: NextFunction) {
-        try {
-            const {videoId} = req
-            const {path} = req.file as requestFile
-            await updateVideoThumbnail({hash: videoId, thumbnailPath: path})
         } catch (err) {
             next(err)
         }

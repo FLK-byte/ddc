@@ -1,6 +1,8 @@
-import { Application } from "express";
+import {Application} from "express";
 import {videoController} from "../../Controllers"
-export function deleteRoutes (app: Application) {
+import {fileHashMiddleware} from "../../Middlewares";
+
+export function deleteRoutes(app: Application) {
     const controller = new videoController()
-    app.delete("/delete/:id", controller.deleteVideo)
+    app.delete("/delete/:id", fileHashMiddleware, controller.deleteVideo)
 }

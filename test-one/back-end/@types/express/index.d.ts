@@ -4,7 +4,7 @@ declare global {
         interface Request {
             customFileDest: string,
             customFileType: string
-            videoId: string
+            hashIdentifier: string
         }
     }
 }

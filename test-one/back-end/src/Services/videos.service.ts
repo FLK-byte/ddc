@@ -14,15 +14,14 @@ export const createVideo = async ({hash, videoPath, title, description}: videoPr
         data: {
             hash,
             videoPath,
-            thumbnailPath: '',
-            title: title,
+            title,
             description: description || ''
         }
     })
 }
 
-export const findVideoById = (hash: string) => {
-    return prisma.videos.findMany({
+export const findVideoByHash = (hash: string) => {
+    return prisma.videos.findFirst({
         where: {
             hash
         }
@@ -37,24 +36,3 @@ export const deleteVideo = (hash: string) => {
     })
 }
 
-export const updateVideoThumbnail = ({hash, thumbnailPath}: { hash: string, thumbnailPath: string }) => {
-    return prisma.videos.update({
-        data: {
-            thumbnailPath
-        },
-        where: {
-            hash
-        }
-    })
-}
-
-export const deleteVideoThumbnail = (hash: string) => {
-    return prisma.videos.update({
-        data: {
-            thumbnailPath: ""
-        },
-        where: {
-            hash
-        }
-    })
-}
